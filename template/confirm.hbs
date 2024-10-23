@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Simple Transactional Email</title>
+    <title>Confirm Account</title>
     <style>
         /* -------------------------------------
           GLOBAL RESETS
@@ -357,7 +357,7 @@
 </head>
 
 <body class="">
-    <span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
+    <span class="preheader">Solicitação de cadastro de conta na sua oficina.</span>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
         <tr>
             <td>&nbsp;</td>
@@ -373,7 +373,7 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td>
-                                            <p>Olá, bem vindo ao Garage</p>
+                                            <p>Olá, {{username}} acabou de ser cadastrado na sua oficina</p>
                                             <p>Aqui está o seu código de confirmação de conta: {{code}}</p>
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0"
                                                 class="btn btn-primary">
@@ -385,7 +385,7 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <td> <a href="http://htmlemail.io"
-                                                                                target="_blank">Call To Action</a> </td>
+                                                                                target="_blank">Confirme o usuário</a> </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>

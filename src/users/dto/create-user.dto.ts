@@ -7,4 +7,7 @@ export class CreateUserDto {
   email: string;
   password: string;
   status?: registerStatus;
+  tenantId: string;
+  verificationToken?: string;
+  isVerified: boolean;
 }

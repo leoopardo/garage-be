@@ -1,5 +1,10 @@
 // src/tenant/tenant.service.ts
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel, getConnectionToken } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
@@ -8,6 +13,7 @@ import { EmailService } from 'src/email/email.service';
 import { User, UserSchema } from 'src/users/entities/user.entity';
 import { Tenant } from './entities/tenant.schema';
 import { createTenantDto } from './types/tenant.interface';
+import { Config, ConfigSchema } from 'src/configs/entities/config.entity';
 
 @Injectable()
 export class TenantService {
@@ -77,8 +83,10 @@ export class TenantService {
     });
 
     await newDbConnection.createCollection('users');
+    await newDbConnection.createCollection('configs');
 
     const UserModel = newDbConnection.model(User.name, UserSchema);
+    const ConfigModel = newDbConnection.model(Config.name, ConfigSchema);
 
     try {
       const user = await UserModel.create({
@@ -87,11 +95,26 @@ export class TenantService {
         role: 'admin',
         status: 'active',
         password: tenant.adminPassword,
+        isVerified: true,
+        tenant: tenant._id,
       });
       const { password: _, ...userWithoutPassword } = user.toObject();
 
+      try {
+        await ConfigModel.create({
+          module: 'config',
+          nextPaymentDate: tenant.nextPaymentDate,
+          workshopName: tenant.workshopName,
+          subdomain: tenant.subdomain,
+          plan: tenant.plan,
+          admin: user._id,
+        });
+      } catch (error) {}
+
       return userWithoutPassword;
-    } catch (error) {}
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao criar o usuário', error);
+    }
   }
 
   async findTenantBySubdomain(subdomain: string) {

@@ -1,17 +1,22 @@
 // src/app.module.ts
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TenantMiddleware } from './tenants/tenant.middleware';
+import { APP_FILTER } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { tenantConnectionProviders } from './providers/tenant-connection.provider';
+import { tenantModels } from './providers/tenant-model.provider';
+import { ValidationExceptionFilter } from './providers/validation-exception.filter';
 import { TenantModule } from './tenants/tenant.module';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { AuthModule } from './auth/auth.module';
-import { APP_FILTER } from '@nestjs/core';
-import { ValidationExceptionFilter } from './providers/validation-exception.filter';
+import { VehiclesModule } from './vehicles/vehicles.module';
+import { MechanicalsModule } from './mechanicals/mechanicals.module';
+import { ConfigsModule } from './configs/configs.module';
 
 @Module({
   imports: [
@@ -54,12 +59,20 @@ import { ValidationExceptionFilter } from './providers/validation-exception.filt
     TenantModule,
     UsersModule,
     AuthModule,
+    JwtModule,
+    VehiclesModule,
+    MechanicalsModule,
+    ConfigsModule,
   ],
   providers: [
     {
       provide: APP_FILTER,
       useClass: ValidationExceptionFilter,
     },
+    tenantConnectionProviders,
+    tenantModels.userModel,
+    tenantModels.configsModel,
+    AuthService,
   ],
   controllers: [UsersController],
 })

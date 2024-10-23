@@ -12,6 +12,7 @@ export const tenantConnectionProviders = {
       );
     }
     const tenantConnection = connection.useDb(`oficina_${request.subdomain}`);
+
     return tenantConnection;
   },
   inject: [REQUEST, getConnectionToken()],
