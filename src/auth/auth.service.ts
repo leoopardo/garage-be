@@ -80,7 +80,7 @@ export class AuthService {
       const user = await this.userModel.findById(payload._id);
 
       if (!user) {
-        throw new NotFoundException('Usuário não encontrado');
+        throw new UnauthorizedException('Usuário não encontrado');
       }
 
       const { password: _, ...userWithoutPassword } = user.toObject();
@@ -89,7 +89,7 @@ export class AuthService {
     } catch (error) {
       console.error(error);
 
-      throw new InternalServerErrorException(error);
+      throw new UnauthorizedException(error);
     }
   }
 }

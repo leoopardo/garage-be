@@ -1,12 +1,14 @@
 // src/config.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
-export class Vehicle extends Document {
-  // aqui vai ser um objectId que vai referenciar a tabela de clientes
-  @Prop({ required: true })
-  owner: string;
+export class Vehicles extends Document {
+  @Prop({ default: true })
+  active: boolean;
+
+  @Prop({ type: Types.ObjectId, ref: 'Client' })
+  owner: Types.ObjectId;
 
   @Prop({ required: true })
   brand: string;
@@ -20,7 +22,7 @@ export class Vehicle extends Document {
   @Prop()
   color: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   licensePlate: string;
 
   @Prop()
@@ -46,4 +48,4 @@ export class Vehicle extends Document {
   };
 }
 
-export const ConfigSchema = SchemaFactory.createForClass(Vehicle);
+export const VehicleSchema = SchemaFactory.createForClass(Vehicles);

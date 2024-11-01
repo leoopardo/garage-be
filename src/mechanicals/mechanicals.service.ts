@@ -18,8 +18,6 @@ export class MechanicalsService {
   ) {}
 
   async create(createMechanicalDto: CreateMechanicalDto) {
-    console.log(createMechanicalDto);
-
     try {
       return await this.mechanicals.create({
         ...createMechanicalDto,
@@ -31,29 +29,32 @@ export class MechanicalsService {
     }
   }
 
-  async findAll({
-    limit,
-    page,
-    search,
-  }: commonQueryParams): Promise<listResponse<Mechanical>> {
+  async findAll({ limit, page, search }: commonQueryParams) {
     try {
-      limit = limit || 10;
-      page = page || 1;
-      const skip = (page - 1) * limit;
       const query: any = {};
       if (search) {
         query.$or = [
-          { name: { $regex: search, $options: 'i' } },
+          { firstname: { $regex: search, $options: 'i' } },
           { lastname: { $regex: search, $options: 'i' } },
           { cellphone: { $regex: search, $options: 'i' } },
         ];
       }
 
+      if (!limit || page) {
+        query.active = true;
+        return await this.mechanicals.find(query).exec();
+      }
+      limit = limit || 15;
+      page = page || 1;
+      const skip = (page - 1) * limit;
+
       const totalMechanicals =
-        (await this.mechanicals.countDocuments(query)) || 1;
+        (await this.mechanicals.countDocuments(query)) || 0;
       const mechanicals = await this.mechanicals
         .find(query)
         .skip(skip)
+        .sort({ createdAt: -1 })
+        .sort({ active: -1 })
         .limit(limit)
         .populate('servicesHistory')
         .exec();
@@ -76,7 +77,7 @@ export class MechanicalsService {
     }
   }
 
-  async update(id: number, updateMechanicalDto: UpdateMechanicalDto) {
+  async update(id: string, updateMechanicalDto: UpdateMechanicalDto) {
     try {
       return await this.mechanicals.findByIdAndUpdate(id, updateMechanicalDto);
     } catch (error) {

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordem de Serviço</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+    .header, .footer {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0;
+    }
+    .details, .items, .totals, .signatures {
+      margin-bottom: 20px;
+    }
+    .details div, .totals div {
+      margin: 5px 0;
+    }
+    .items table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .items th, .items td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .totals div {
+      font-weight: bold;
+    }
+    .signatures {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .signatures div {
+      display: flex;
+        justfy-content: center;
+      flex-direction: column;
+      text-align: center;
+      width: 100%;
+    }
+    .signatures .signature-line {
+      margin-top: 60px;
+      border-top: 1px solid #333;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{ workshopName }}</h1>
+      <p>Ordem de Serviço</p>
+    </div>
+
+    <div class="details">
+      <div><strong>Responsável:</strong> {{ responsibleName }}</div>
+      <div><strong>Cliente:</strong> {{ clientName }}</div>
+      <div><strong>Data:</strong> {{ date }}</div>
+    </div>
+
+    <div class="items">
+      <h2>Itens e Serviços</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Quantidade</th>
+            <th>Preço Unitário</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr>
+            <td>{{ this.description }}</td>
+            <td>{{ this.quantity }}</td>
+            <td>R$ {{ this.unitPrice }}</td>
+            <td>R$ {{ this.total }}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="totals">
+      <div><strong>Sub-total:</strong> R$ {{ subTotal }}</div>
+      <div><strong>Custo de Mão de Obra:</strong> R$ {{ laborCost }}</div>
+      <div><strong>Total Geral:</strong> R$ {{ total }}</div>
+    </div>
+
+    <div class="signatures">
+      <div>
+        <div class="signature-line">Assinatura do Responsável</div>
+        <p>{{ responsibleName }}</p>
+      </div>
+      <div>
+        <div class="signature-line">Assinatura do Cliente</div>
+        <p>{{ clientName }}</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Obrigado por escolher nossa oficina!</p>
+    </div>
+  </div>
+</body>
+</html>

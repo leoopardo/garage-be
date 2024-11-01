@@ -18,8 +18,6 @@ export class TenantController {
 
   @Get('verify')
   async verifyTenant(@Query('token') token: string) {
-    console.log(token);
-
     await this.tenantService.verifyTenant(token);
     return { message: 'Tenant verificado com sucesso!' };
   }

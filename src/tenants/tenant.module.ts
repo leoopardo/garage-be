@@ -5,6 +5,7 @@ import { TenantService } from './tenant.service';
 import { Tenant, TenantSchema } from './entities/tenant.schema';
 import { TenantController } from './tenant.controller';
 import { EmailModule } from 'src/email/email.module';
+import { BoardsModule } from 'src/boards/boards.module';
 
 @Module({
   imports: [

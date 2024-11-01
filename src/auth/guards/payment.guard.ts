@@ -5,21 +5,20 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 import { Model } from 'mongoose';
 import { Config } from 'src/configs/entities/config.entity';
+import { TenantProvider } from 'src/providers/tenant-model.provider';
 
 @Injectable()
 export class PaymentGuard implements CanActivate {
-  constructor(@Inject('CONFIGS_MODEL') private configs: Model<Config>) {}
+  constructor(
+    @Inject(TenantProvider.configsModel) private configs: Model<Config>,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const payload = await this.configs.find();
-      console.log(payload);
 
       if (!payload[0]) {
         throw new InternalServerErrorException('Configuração não encontrada');

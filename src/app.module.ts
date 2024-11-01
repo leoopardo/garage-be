@@ -17,6 +17,13 @@ import { UsersModule } from './users/users.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { MechanicalsModule } from './mechanicals/mechanicals.module';
 import { ConfigsModule } from './configs/configs.module';
+import { ServicesModule } from './services/services.module';
+import { BoardsModule } from './boards/boards.module';
+import { QuotesModule } from './quotes/quotes.module';
+import { ServiceStatusModule } from './service-status/service-status.module';
+import { ClientsModule } from './clients/clients.module';
+import { StockModule } from './stock/stock.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -63,6 +70,14 @@ import { ConfigsModule } from './configs/configs.module';
     VehiclesModule,
     MechanicalsModule,
     ConfigsModule,
+    ServicesModule,
+    BoardsModule,
+    QuotesModule,
+    ServiceStatusModule,
+    ClientsModule,
+    StockModule,
+    CloudinaryModule,
+    CloudinaryModule,
   ],
   providers: [
     {

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/jwt.guard';
@@ -29,7 +30,9 @@ export class MechanicalsController {
   @UseGuards(AuthGuard)
   @UseGuards(PaymentGuard)
   @Get()
-  findAll(@Param() queryParams: commonQueryParams) {
+  findAll(@Query() queryParams: commonQueryParams) {
+    console.log(queryParams);
+
     return this.mechanicalsService.findAll(queryParams);
   }
 
@@ -47,7 +50,7 @@ export class MechanicalsController {
     @Param('id') id: string,
     @Body() updateMechanicalDto: UpdateMechanicalDto,
   ) {
-    return this.mechanicalsService.update(+id, updateMechanicalDto);
+    return this.mechanicalsService.update(id, updateMechanicalDto);
   }
 
   @UseGuards(AuthGuard)

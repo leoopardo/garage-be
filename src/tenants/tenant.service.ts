@@ -14,6 +14,13 @@ import { User, UserSchema } from 'src/users/entities/user.entity';
 import { Tenant } from './entities/tenant.schema';
 import { createTenantDto } from './types/tenant.interface';
 import { Config, ConfigSchema } from 'src/configs/entities/config.entity';
+import { Board, BoardSchema } from 'src/boards/entities/board.entity';
+import { defaultBoards } from './consts/boards';
+import {
+  ServiceStatus,
+  ServiceStatusSchema,
+} from 'src/service-status/entities/service-status.entity';
+import { defaultSteps } from 'src/service-status/consts/defaultSteps';
 
 @Injectable()
 export class TenantService {
@@ -84,9 +91,16 @@ export class TenantService {
 
     await newDbConnection.createCollection('users');
     await newDbConnection.createCollection('configs');
+    await newDbConnection.createCollection('boards');
+    await newDbConnection.createCollection('service-status');
 
     const UserModel = newDbConnection.model(User.name, UserSchema);
     const ConfigModel = newDbConnection.model(Config.name, ConfigSchema);
+    const BoardModel = newDbConnection.model(Board.name, BoardSchema);
+    const ServiceStatusModel = newDbConnection.model(
+      ServiceStatus.name,
+      ServiceStatusSchema,
+    );
 
     try {
       const user = await UserModel.create({
@@ -110,6 +124,34 @@ export class TenantService {
           admin: user._id,
         });
       } catch (error) {}
+
+      try {
+        let timeout = 0;
+        defaultBoards.forEach(async ({ name, statusColor }) => {
+          setTimeout(
+            async () => {
+              await BoardModel.create({
+                name,
+                statusColor,
+              });
+            },
+            (timeout += 500),
+          );
+        });
+      } catch (error) {
+        console.error('erro ao criar os boards', error);
+      }
+
+      try {
+        defaultSteps.forEach(async ({ name, description }) => {
+          await ServiceStatusModel.create({
+            name,
+            description,
+          });
+        });
+      } catch (error) {
+        console.error('erro ao criar os steps', error);
+      }
 
       return userWithoutPassword;
     } catch (error) {
