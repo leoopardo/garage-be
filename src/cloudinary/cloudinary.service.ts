@@ -57,7 +57,6 @@ export class CloudinaryService {
         waitUntil: 'networkidle0',
         timeout: 120000,
       });
-      await page.screenshot({ path: 'debug-screenshot.png', fullPage: true });
 
       const pdfBuffer = await page.pdf({ format: 'A4', timeout: 120000 });
 
