@@ -13,8 +13,8 @@ import { TenantMiddleware } from 'src/tenants/tenant.middleware';
   providers: [
     ServiceStatusService,
     tenantConnectionProviders,
-    tenantModels.serviceStatusModel,
     tenantModels.configsModel,
+    tenantModels.serviceStatusModel,
   ],
 })
 export class ServiceStatusModule implements NestModule {

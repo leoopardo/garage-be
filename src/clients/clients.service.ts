@@ -5,12 +5,15 @@ import { commonQueryParams } from 'src/types/common.types';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
+import { Vehicles } from 'src/vehicles/entities/vehicle.entity';
 
 @Injectable()
 export class ClientsService {
   constructor(
     @Inject(TenantProvider.clientModel)
     private clients: Model<Client>,
+    @Inject(TenantProvider.vehicleModel)
+    private vehicles: Model<Vehicles>,
   ) {}
   async create(createClientDto: CreateClientDto) {
     try {

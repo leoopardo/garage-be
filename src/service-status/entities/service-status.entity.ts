@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false, collection: 'service-status' })
 export class ServiceStatus extends Document {
-  @Prop({ default: false })
+  @Prop({ default: true })
   active: boolean;
 
   @Prop({ required: true, unique: true })

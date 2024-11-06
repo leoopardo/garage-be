@@ -40,7 +40,7 @@ export class MechanicalsService {
         ];
       }
 
-      if (!limit || page) {
+      if (!limit || !page) {
         query.active = true;
         return await this.mechanicals.find(query).exec();
       }

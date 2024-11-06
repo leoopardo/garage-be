@@ -15,6 +15,12 @@ import { JwtModule } from '@nestjs/jwt';
     tenantConnectionProviders,
     tenantModels.configsModel,
     tenantModels.servicesModel,
+    tenantModels.serviceStatusModel,
+    tenantModels.boardsModel,
+    tenantModels.quotesModel,
+    tenantModels.clientModel,
+    tenantModels.vehicleModel,
+    tenantModels.mechanicalsModel,
   ],
 })
 export class ServicesModule implements NestModule {

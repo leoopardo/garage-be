@@ -77,7 +77,13 @@ export class CloudinaryService {
   async uploadToCloudinary(pdfBuffer: Buffer): Promise<string> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: 'raw', folder: 'orders' },
+        {
+          resource_type: 'raw',
+          folder: 'orders',
+          type: 'upload',
+          format: 'pdf',
+          flags: ['attachment'],
+        },
         (error, result) => {
           if (error) {
             console.error('Cloudinary upload error:', error);

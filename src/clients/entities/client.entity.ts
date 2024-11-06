@@ -14,7 +14,7 @@ export class Client extends Document {
   @Prop({ required: true })
   cellphone: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: Vehicles.name }], default: [] })
+  @Prop({ type: [Types.ObjectId], ref: Vehicles.name, default: [] })
   vehicles: Types.ObjectId[];
 }
 

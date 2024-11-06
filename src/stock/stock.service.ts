@@ -36,7 +36,7 @@ export class StockService {
         ];
       }
 
-      if (!limit || page) {
+      if (!limit || !page) {
         query.active = true;
         return await this.stockModel.find(query).exec();
       }

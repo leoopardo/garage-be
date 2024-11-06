@@ -1,9 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
+import { AuthGuard } from 'src/auth/guards/jwt.guard';
+import { PaymentGuard } from 'src/auth/guards/payment.guard';
+import { commonQueryParams } from 'src/types/common.types';
 
 @Controller('quotes')
+@UseGuards(AuthGuard)
+@UseGuards(PaymentGuard)
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
@@ -13,8 +28,8 @@ export class QuotesController {
   }
 
   @Get()
-  findAll() {
-    return this.quotesService.findAll();
+  findAll(@Query() query: commonQueryParams) {
+    return this.quotesService.findAll(query);
   }
 
   @Get(':id')

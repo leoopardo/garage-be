@@ -14,7 +14,13 @@ import { BoardsService } from './boards.service';
     BoardsService,
     tenantConnectionProviders,
     tenantModels.configsModel,
+    tenantModels.servicesModel,
+    tenantModels.serviceStatusModel,
     tenantModels.boardsModel,
+    tenantModels.quotesModel,
+    tenantModels.clientModel,
+    tenantModels.vehicleModel,
+    tenantModels.mechanicalsModel,
   ],
 })
 export class BoardsModule implements NestModule {

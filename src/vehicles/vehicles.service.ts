@@ -1,11 +1,11 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { Client } from 'src/clients/entities/client.entity';
+import { TenantProvider } from 'src/providers/tenant-model.provider';
+import { commonQueryParams } from 'src/types/common.types';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import { TenantProvider } from 'src/providers/tenant-model.provider';
-import { Model } from 'mongoose';
 import { Vehicles } from './entities/vehicle.entity';
-import { Client } from 'src/clients/entities/client.entity';
-import { commonQueryParams } from 'src/types/common.types';
 
 @Injectable()
 export class VehiclesService {
@@ -43,11 +43,10 @@ export class VehiclesService {
           { brand: { $regex: search, $options: 'i' } },
           { carModel: { $regex: search, $options: 'i' } },
           { color: { $regex: search, $options: 'i' } },
-          { year: { $regex: search, $options: 'i' } },
         ];
       }
 
-      if (!limit || page) {
+      if (!limit || !page) {
         query.active = true;
         return await this.vehicles.find(query).exec();
       }
@@ -56,13 +55,18 @@ export class VehiclesService {
         .find(query)
         .populate({
           path: 'owner',
-          match: { name: { $regex: search || '', $options: 'i' } },
         })
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
 
-      return vehicles;
+      return {
+        data: vehicles,
+        page,
+        limit,
+        total: vehicles.length,
+        totalPages: Math.ceil(vehicles.length / limit),
+      };
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao buscar veículos.');
