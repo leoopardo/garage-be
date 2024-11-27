@@ -1,4 +1,5 @@
 export class CreateVehicleDto {
+  image: string | Buffer;
   owner: string;
   brand: string;
   carModel: string;

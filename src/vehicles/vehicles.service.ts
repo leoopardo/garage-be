@@ -6,6 +6,7 @@ import { commonQueryParams } from 'src/types/common.types';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { Vehicles } from './entities/vehicle.entity';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class VehiclesService {
@@ -14,11 +15,19 @@ export class VehiclesService {
     private vehicles: Model<Vehicles>,
     @Inject(TenantProvider.clientModel)
     private clients: Model<Client>,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async create(createVehicleDto: CreateVehicleDto) {
     try {
-      const newVehicle = await this.vehicles.create(createVehicleDto);
+      const image = await this.cloudinaryService.uploadImage(
+        createVehicleDto.image,
+      );
+
+      const newVehicle = await this.vehicles.create({
+        ...createVehicleDto,
+        image,
+      });
       const client = await this.clients.findById(createVehicleDto.owner);
       if (!client) {
         throw new BadRequestException('Cliente não encontrado');
@@ -48,7 +57,7 @@ export class VehiclesService {
 
       if (!limit || !page) {
         query.active = true;
-        return await this.vehicles.find(query).exec();
+        return await this.vehicles.find(query).sort({ createdAt: -1 }).exec();
       }
 
       const vehicles = await this.vehicles
@@ -58,6 +67,7 @@ export class VehiclesService {
         })
         .limit(limit)
         .skip((page - 1) * limit)
+        .sort({ createdAt: -1 })
         .exec();
 
       return {

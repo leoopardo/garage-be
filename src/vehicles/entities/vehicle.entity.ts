@@ -7,6 +7,9 @@ export class Vehicles extends Document {
   @Prop({ default: true })
   active: boolean;
 
+  @Prop()
+  image: string;
+
   @Prop({ type: Types.ObjectId, ref: 'Client' })
   owner: Types.ObjectId;
 

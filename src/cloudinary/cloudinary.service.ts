@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
+import { UploadApiResponse } from 'cloudinary';
 import * as fs from 'fs';
 import * as Handlebars from 'handlebars';
 import * as path from 'path';
@@ -9,15 +9,44 @@ import { cloudinary } from './cloudinary.config';
 @Injectable()
 export class CloudinaryService {
   // Método para upload de imagem para o Cloudinary
-  async uploadImage(
-    filePath: string,
-  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+  async uploadImage(file: string | Buffer): Promise<string> {
+    // Retorna uma string (URL da imagem)
     try {
-      const result = await cloudinary.uploader.upload(filePath, {
-        folder: 'service_orders',
-        resource_type: 'auto',
-      });
-      return result;
+      if (typeof file === 'string' && file.startsWith('data:image')) {
+        // Remove o prefixo do base64
+        const base64Data = file.split(';base64,').pop();
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        // Envolve o upload_stream em uma Promise para aguardar o upload
+        const result = await new Promise<UploadApiResponse>(
+          (resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              {
+                folder: 'service_orders',
+                resource_type: 'image',
+              },
+              (error, result) => {
+                if (error) {
+                  return reject(
+                    new Error(`Cloudinary upload failed: ${error.message}`),
+                  );
+                }
+                resolve(result as UploadApiResponse);
+              },
+            );
+            uploadStream.end(buffer);
+          },
+        );
+
+        return result.secure_url; // Retorna o link seguro da imagem
+      } else {
+        // Upload direto de um caminho de arquivo
+        const result = await cloudinary.uploader.upload(file as string, {
+          folder: 'service_orders',
+          resource_type: 'auto',
+        });
+        return result.secure_url; // Retorna o link seguro da imagem
+      }
     } catch (error) {
       throw new Error(`Cloudinary upload failed: ${error.message}`);
     }

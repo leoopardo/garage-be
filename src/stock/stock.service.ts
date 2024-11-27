@@ -31,8 +31,6 @@ export class StockService {
           { category: { $regex: search, $options: 'i' } },
           { subCategory: { $regex: search, $options: 'i' } },
           { brand: { $regex: search, $options: 'i' } },
-          { costPrice: { $regex: search, $options: 'i' } },
-          { sellingPrice: { $regex: search, $options: 'i' } },
         ];
       }
 

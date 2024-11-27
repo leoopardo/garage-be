@@ -9,11 +9,13 @@ import { TenantMiddleware } from 'src/tenants/tenant.middleware';
 import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Vehicles, VehicleSchema } from './entities/vehicle.entity';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
     TenantModule,
     JwtModule,
+    CloudinaryModule,
     MongooseModule.forFeature([{ name: Vehicles.name, schema: VehicleSchema }]),
   ],
   controllers: [VehiclesController],
